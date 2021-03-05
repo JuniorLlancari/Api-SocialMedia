@@ -19,6 +19,14 @@ namespace SocialMedia.Infrastructure.Repositories
         }
 
 
+        public async Task<Post> GetPost(int id)
+        {
+
+            var caja = await _context.Posts.FirstOrDefaultAsync(x => x.PostId == id);
+            return caja;
+
+        }
+
         public async Task<IEnumerable<Post>> GetPosts()
         {
             var caja = await _context.Posts.ToArrayAsync();
@@ -27,6 +35,5 @@ namespace SocialMedia.Infrastructure.Repositories
 
 
         }
-
     }
 }
