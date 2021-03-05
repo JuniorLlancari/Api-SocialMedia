@@ -21,10 +21,10 @@ namespace SocialMedia.Api.Controllers
 
 
         [HttpGet]
-        public IActionResult Get()
+        public  async Task<IActionResult> GetPosts()
         {
-            
-            return Ok(_postRepository.GetPosts());
+            var posts = await _postRepository.GetPosts();
+            return Ok(posts);
         }
 
 

@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SocialMedia.Core.Interfaces
 {
     public interface IPostRepository
     {
-        IEnumerable<Post> GetPosts();
+        Task<IEnumerable<Publicacion>> GetPosts();
     }
 }
