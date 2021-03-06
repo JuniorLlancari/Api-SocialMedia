@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ using SocialMedia.Core.Interfaces;
 using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using SocialMedia.Infrastructure.Filters;
+using FluentValidation.AspNetCore;
 
 namespace SocialMedia.Api
 {
@@ -44,10 +45,10 @@ namespace SocialMedia.Api
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             })
-            //QUITAMOS LAS VALIDADCION DE APICONTROLLER SOBRE EL MODELO  3
+            //QUITAMOS LAS VALIDADCION DE [APICONTROLLER] SOBRE LAS MODELOS PARA PERSONALIZAR FILTERS   
             .ConfigureApiBehaviorOptions(options =>
             {
-                options.SuppressModelStateInvalidFilter = true;
+              // options.SuppressModelStateInvalidFilter = true;
             });
             
             
@@ -55,11 +56,17 @@ namespace SocialMedia.Api
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddDbContext<SocialMediaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
-            //APLICANDO FILTRO DE FORMA GLOBAL 4
+            //APLICANDO FILTRO DE FORMA GLOBAL 4 -- NO RECOMEND - REMOVIDO
             services.AddMvc(options =>
             {
                 options.Filters.Add<ValidationFilter>();
+            }).AddFluentValidation(options =>
+            {
+
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
+            //FLUENT  VALIDATION
+            
  
         }
 
