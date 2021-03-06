@@ -15,6 +15,7 @@ using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using SocialMedia.Infrastructure.Filters;
 
 namespace SocialMedia.Api
 {
@@ -31,14 +32,22 @@ namespace SocialMedia.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //CONFIGURAR AUTOMAPER ,  solo se mapea una vez, obtener los ascembli busca en nues
+            
+
+
+            //CONFIGURAR AUTOMAPER ,  solo se mapea una vez, obtener los ascembli busca en nues 2
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
-            //BREAK REFERENCE CIRCLE
+            //BREAK REFERENCE CIRCLE 1
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            })
+            //QUITAMOS LAS VALIDADCION DE APICONTROLLER SOBRE EL MODELO  3
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
             });
             
             
@@ -46,7 +55,11 @@ namespace SocialMedia.Api
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddDbContext<SocialMediaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
-
+            //APLICANDO FILTRO DE FORMA GLOBAL 4
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+            });
  
         }
 
