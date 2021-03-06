@@ -30,10 +30,12 @@ namespace SocialMedia.Infrastructure.Repositories
         public async Task<IEnumerable<Post>> GetPosts()
         {
             var caja = await _context.Posts.ToArrayAsync();
-
             return caja;
-
-
+        }
+        public async Task insertPost(Post obj)
+        {
+            _context.Posts.Add(obj);
+            await _context.SaveChangesAsync();
         }
     }
 }

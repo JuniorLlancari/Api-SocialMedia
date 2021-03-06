@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using SocialMedia.Api;
 using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Core.Entities;
+
 namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -42,6 +44,13 @@ namespace SocialMedia.Api.Controllers
             return Ok(posts);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> Post(Post obj)
+        {
+             await _postRepository.insertPost(obj);
+            return Ok(obj);
+        }
 
     }
 }
