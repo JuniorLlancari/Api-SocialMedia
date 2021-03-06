@@ -9,6 +9,7 @@ using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Entities;
 using SocialMedia.Infrastructure.DTOs;
+using AutoMapper;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -16,10 +17,13 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private IPostRepository _postRepository;
-        public PostController(IPostRepository postRepository)
+        private readonly IPostRepository _postRepository;
+        private readonly IMapper _mapper;
+
+        public PostController(IPostRepository postRepository, IMapper mapper)
         {
             _postRepository = postRepository;
+            _mapper = mapper;
         }
 
         /*
@@ -34,8 +38,10 @@ namespace SocialMedia.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPosts()
         {
-            
+            // DE PostDto => Post
             var posts = await _postRepository.GetPosts();
+            var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
+           /* 
             var postsDto = posts.Select(x => new PostDto // pasamos A DTOS
             {
                 PostId = x.PostId,
@@ -45,7 +51,8 @@ namespace SocialMedia.Api.Controllers
                 UserId = x.UserId
 
             });
-                    
+           */
+
             return Ok(postsDto);
         }
 
@@ -53,15 +60,8 @@ namespace SocialMedia.Api.Controllers
         public async Task<IActionResult> GetPost(int id)
         {
             var posts = await _postRepository.GetPost(id);
-            var postsDto =  new PostDto // pasamos A DTOS
-            {
-                PostId = posts.PostId,
-                Date = posts.Date,
-                Description = posts.Description,
-                Image = posts.Image,
-                UserId = posts.UserId
+            var postsDto = _mapper.Map<PostDto>(posts);
 
-            };
             return Ok(postsDto);
         }
 
@@ -69,16 +69,9 @@ namespace SocialMedia.Api.Controllers
         [HttpPost]//Post
         public async Task<IActionResult> Post(PostDto postDto)
         {
-            var post = new Post
-            {
-                Date = postDto.Date,
-                Description = postDto.Description,
-                Image = postDto.Image,
-                UserId = postDto.UserId
-               
-            };
-
-             await _postRepository.insertPost(post);
+            var post = _mapper.Map<Post>(postDto);
+             
+            await _postRepository.insertPost(post);
             return Ok(post);
         }
 
