@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using SocialMedia.Core.Entities;
-using SocialMedia.Infrastructure.DTOs;
+using SocialMedia.Core.DTOs;
 
 namespace SocialMedia.Infrastructure.Mappings
 {

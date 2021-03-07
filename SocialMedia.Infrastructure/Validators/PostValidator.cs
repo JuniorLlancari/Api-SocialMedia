@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FluentValidation;
-using SocialMedia.Infrastructure.DTOs;
+using SocialMedia.Core.DTOs;
 
 namespace SocialMedia.Infrastructure.Validators
 {

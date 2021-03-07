@@ -8,9 +8,9 @@ using SocialMedia.Api;
 using SocialMedia.Infrastructure.Repositories;
 using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Entities;
-using SocialMedia.Infrastructure.DTOs;
-using AutoMapper;
+ using AutoMapper;
 using SocialMedia.Api.Response;
+using SocialMedia.Core.DTOs;
 
 namespace SocialMedia.Api.Controllers
 {
