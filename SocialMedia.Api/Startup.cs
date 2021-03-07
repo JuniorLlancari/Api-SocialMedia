@@ -17,6 +17,7 @@ using SocialMedia.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Infrastructure.Filters;
 using FluentValidation.AspNetCore;
+using SocialMedia.Core.Services;
 
 namespace SocialMedia.Api
 {
@@ -54,6 +55,9 @@ namespace SocialMedia.Api
             
 
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+
             services.AddDbContext<SocialMediaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
             //APLICANDO FILTRO DE FORMA GLOBAL 4 -- NO RECOMEND - REMOVIDO
