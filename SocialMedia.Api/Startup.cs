@@ -53,12 +53,16 @@ namespace SocialMedia.Api
             });
             
             
+
+
             services.AddTransient<IPostService, PostService>();
             // REMPLAZANDO POR EL REPO GENERICO
            // services.AddTransient<IPostRepository, PostRepository>();
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
+            //unit of work
+            services.AddTransient<IUnitOfWork,UnirOfWork>();
 
 
 
