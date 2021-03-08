@@ -10,8 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Infrastructure.Repositories
 {
-    public class PostRepository :IPostRepository
+    public class PostRepository // :IPostRepository
     {
+        /*
         private readonly SocialMediaContext _context;
         public PostRepository(SocialMediaContext context) 
         {
@@ -57,6 +58,8 @@ namespace SocialMedia.Infrastructure.Repositories
             int rows = await _context.SaveChangesAsync();
             return rows > 0;
         }
+
+        */
     }
 
     

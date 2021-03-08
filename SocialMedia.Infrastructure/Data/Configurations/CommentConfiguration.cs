@@ -8,8 +8,8 @@ namespace SocialMedia.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.ToTable("Comentario");
-            builder.HasKey(e => e.CommentId);
-            builder.Property(e => e.CommentId).ValueGeneratedNever().HasColumnName("IdComentario");
+            builder.HasKey(e => e.Id);
+            builder.Property(e => e.Id).ValueGeneratedNever().HasColumnName("IdComentario");
 
 
             //AGREGANDO LOS CAMPO QUE FALTAN

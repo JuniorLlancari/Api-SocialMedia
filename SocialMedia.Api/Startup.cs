@@ -53,10 +53,14 @@ namespace SocialMedia.Api
             });
             
             
-
-            services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IPostService, PostService>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            // REMPLAZANDO POR EL REPO GENERICO
+           // services.AddTransient<IPostRepository, PostRepository>();
+            //services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+
+
+
 
             services.AddDbContext<SocialMediaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
@@ -66,7 +70,6 @@ namespace SocialMedia.Api
                 options.Filters.Add<ValidationFilter>();
             }).AddFluentValidation(options =>
             {
-
                 options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
             //FLUENT  VALIDATION

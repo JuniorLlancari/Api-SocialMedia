@@ -10,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository // : IUserRepository
     {
+
+        /*
         private readonly SocialMediaContext _context;
         public UserRepository(SocialMediaContext context)
         {
@@ -31,6 +33,6 @@ namespace SocialMedia.Infrastructure.Repositories
             return caja;
 
         }
-
+        */
     }
 }
