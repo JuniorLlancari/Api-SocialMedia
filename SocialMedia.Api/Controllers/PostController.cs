@@ -39,10 +39,10 @@ namespace SocialMedia.Api.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts()
+        public IActionResult GetPosts()
         {
             // DE PostDto => Post
-            var posts = await _postService.GetPosts();
+            var posts = _postService.GetPosts();
             var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
 
 

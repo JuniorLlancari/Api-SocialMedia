@@ -10,57 +10,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Infrastructure.Repositories
 {
-    public class PostRepository // :IPostRepository
+    public class PostRepository : BaseRepository<Post>, IPostRepository
     {
-        /*
-        private readonly SocialMediaContext _context;
-        public PostRepository(SocialMediaContext context) 
+
+
+        public PostRepository(SocialMediaContext context):base(context)
         {
-            _context = context;
-        }
-
-
-        public async Task<Post> GetPost(int id)
-        {
-
-            var caja = await _context.Posts.FirstOrDefaultAsync(x => x.PostId == id);
-            return caja;
 
         }
 
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPostsByUser(int userId)
         {
-            var caja = await _context.Posts.ToArrayAsync();
-            return caja;
+            return await _entities.Where(x => x.UserId == userId).ToListAsync();
+
         }
-        public async Task InsertPost(Post obj)
-        {
-            _context.Posts.Add(obj);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<bool> UpdatePost(Post post)
-        {
-            var currentPost = await GetPost(post.PostId);
-            currentPost.Date = post.Date;
-            currentPost.Description = post.Description;
-            currentPost.Image = post.Image;
-
-            int rows = await _context.SaveChangesAsync();
-            return rows > 0;
-        }
-
-        public async Task<bool> DeletePost(int id)
-        {
-            var currentPost = await GetPost(id);
-            _context.Posts.Remove(currentPost);
-
-            int rows = await _context.SaveChangesAsync();
-            return rows > 0;
-        }
-
-        */
     }
 
-    
+
 }

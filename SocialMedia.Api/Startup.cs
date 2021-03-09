@@ -35,14 +35,16 @@ namespace SocialMedia.Api
         {
 
             
-
-
             //CONFIGURAR AUTOMAPER ,  solo se mapea una vez, obtener los ascembli busca en nues 2
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
             //BREAK REFERENCE CIRCLE 1
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers( options=>
+            {
+                //Agregamos el filtro
+                options.Filters.Add<GlobalExceptionFilter>();
+            }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             })

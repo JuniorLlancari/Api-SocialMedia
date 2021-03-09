@@ -5,7 +5,7 @@ namespace SocialMedia.Core.Interfaces
 {
     public interface IUnitOfWork
     {
-        IRepository<Post> PostRepository { get; }
+        IPostRepository  PostRepository { get; }
         IRepository<User> UserRepository { get; }
         IRepository<Comment> CommentRepository { get; }
 
