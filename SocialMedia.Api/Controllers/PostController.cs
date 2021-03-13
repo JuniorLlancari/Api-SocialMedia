@@ -11,6 +11,7 @@ using SocialMedia.Core.Entities;
  using AutoMapper;
 using SocialMedia.Api.Response;
 using SocialMedia.Core.DTOs;
+using SocialMedia.Core.QueryFilters;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -39,12 +40,12 @@ namespace SocialMedia.Api.Controllers
 
 
         [HttpGet]
-        public IActionResult GetPosts()
+        public IActionResult GetPosts([FromQuery]PostQueryFilter filters)
         {
             // DE PostDto => Post
-            var posts = _postService.GetPosts();
+            var posts = _postService.GetPosts(filters);
             var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
-
+             
 
             var response = new ApiResponse<IEnumerable< PostDto>>(postsDto);
             return Ok(response);
