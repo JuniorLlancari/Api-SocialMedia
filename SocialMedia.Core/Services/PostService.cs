@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SocialMedia.Core.QueryFilters;
+using SocialMedia.Core.CustomEntities;
+
 namespace SocialMedia.Core.Services
 {
 
@@ -38,7 +40,7 @@ namespace SocialMedia.Core.Services
             return await _unitOfWork.PostRepository.GetById(id);
         }
 
-        public IEnumerable<Post> GetPosts(PostQueryFilter filter)
+        public PagedList<Post> GetPosts(PostQueryFilter filter)
         {
             var posts= _unitOfWork.PostRepository.GetAll();
             if (filter.UserId != null)
@@ -54,7 +56,9 @@ namespace SocialMedia.Core.Services
                 posts = posts.Where(x => x.Description.ToLower().Contains(filter.Description.ToLower()));
             }
 
-            return posts;
+            var pagePost = PagedList<Post>.Create(posts, filter.PageNumber, filter.PageSize);
+
+            return pagePost;
 
         }
 

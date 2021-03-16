@@ -18,6 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using SocialMedia.Infrastructure.Filters;
 using FluentValidation.AspNetCore;
 using SocialMedia.Core.Services;
+using SocialMedia.Infrastructure.Interfaces;
+using SocialMedia.Infrastructure.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace SocialMedia.Api
 {
@@ -47,6 +50,7 @@ namespace SocialMedia.Api
             }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             })
             //QUITAMOS LAS VALIDADCION DE [APICONTROLLER] SOBRE LAS MODELOS PARA PERSONALIZAR FILTERS   
             .ConfigureApiBehaviorOptions(options =>
@@ -63,10 +67,18 @@ namespace SocialMedia.Api
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
-            //unit of work
-            services.AddTransient<IUnitOfWork,UnirOfWork>();
+            
+            services.AddTransient<IUnitOfWork,UnirOfWork>(); //unit of work
+            services.AddSingleton<IUriService>(provider =>
+            {
+                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accesor.HttpContext.Request;
+                var absoluteUrl = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(absoluteUrl);
+            });
 
 
+           
 
             services.AddDbContext<SocialMediaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
