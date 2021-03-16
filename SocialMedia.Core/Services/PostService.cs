@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SocialMedia.Core.QueryFilters;
 using SocialMedia.Core.CustomEntities;
+using SocialMedia.Core.Options;
+using Microsoft.Extensions.Options;
 
 namespace SocialMedia.Core.Services
 {
@@ -17,21 +19,23 @@ namespace SocialMedia.Core.Services
     {
 
         private readonly IUnitOfWork _unitOfWork;
+        private readonly PaginationOptions _paginationOptions;
 
-        //antes 02
         /*
+        //antes 02
         private readonly IRepository<Post> _postRepository;
         private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Comment> _commentRepository;*/
+        private readonly IRepository<Comment> _commentRepository; 
 
         //antes 01
         // private readonly IPostRepository _postRepository;
         // private readonly IUserRepository _userRepository;
+        */
 
-
-        public PostService(IUnitOfWork unitOfWork)
+        public PostService(IUnitOfWork unitOfWork, IOptions<PaginationOptions>   option)
         {
             _unitOfWork = unitOfWork;
+            _paginationOptions = option.Value;
         }
 
 
@@ -40,23 +44,27 @@ namespace SocialMedia.Core.Services
             return await _unitOfWork.PostRepository.GetById(id);
         }
 
-        public PagedList<Post> GetPosts(PostQueryFilter filter)
+        public PagedList<Post> GetPosts(PostQueryFilter filters)
         {
-            var posts= _unitOfWork.PostRepository.GetAll();
-            if (filter.UserId != null)
-            {
-                posts = posts.Where(x => x.UserId == filter.UserId); 
-            }
-            if (filter.Date != null)
-            {
-                posts = posts.Where(x => x.Date.ToShortDateString() == filter.Date?.ToShortDateString());
-            }
-            if (filter.Description != null)
-            {
-                posts = posts.Where(x => x.Description.ToLower().Contains(filter.Description.ToLower()));
-            }
+            filters.PageNumber = filters.PageNumber ==0? _paginationOptions.DefaultPageNumber: filters.PageNumber;
+            filters.PageSize = filters.PageSize ==0? _paginationOptions.DefaultPageSize : filters.PageSize;
 
-            var pagePost = PagedList<Post>.Create(posts, filter.PageNumber, filter.PageSize);
+
+
+            var posts = _unitOfWork.PostRepository.GetAll();
+            if (filters.UserId != null)
+            {
+                posts = posts.Where(x => x.UserId == filters.UserId); 
+            }
+            if (filters.Date != null)
+            {
+                posts = posts.Where(x => x.Date.ToShortDateString() == filters.Date?.ToShortDateString());
+            }
+            if (filters.Description != null)
+            {
+                posts = posts.Where(x => x.Description.ToLower().Contains(filters.Description.ToLower()));
+            }
+            var pagePost = PagedList<Post>.Create(posts, filters.PageNumber, filters.PageSize);
 
             return pagePost;
 

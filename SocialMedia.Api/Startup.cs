@@ -21,6 +21,7 @@ using SocialMedia.Core.Services;
 using SocialMedia.Infrastructure.Interfaces;
 using SocialMedia.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
+using SocialMedia.Core.Options;
 
 namespace SocialMedia.Api
 {
@@ -78,7 +79,7 @@ namespace SocialMedia.Api
             });
 
 
-           
+            services.Configure<PaginationOptions> (Configuration.GetSection("Pagination"));
 
             services.AddDbContext<SocialMediaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
