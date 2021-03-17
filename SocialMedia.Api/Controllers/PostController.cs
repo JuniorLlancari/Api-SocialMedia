@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -36,7 +37,7 @@ namespace SocialMedia.Api.Controllers
         //[HttpGet(Name ="GetAll")]
         [HttpGet(Name =nameof(GetPosts))]
 
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK,Type =typeof(ApiResponse<IEnumerable<PostDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
 
         public IActionResult GetPosts([FromQuery]PostQueryFilter filters)
@@ -89,6 +90,8 @@ namespace SocialMedia.Api.Controllers
          }
 
         [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDto>))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetPost(int id)
         {
             var posts = await _postService.GetPost(id);
