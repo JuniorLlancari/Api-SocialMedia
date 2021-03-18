@@ -13,6 +13,8 @@ namespace SocialMedia.Infrastructure.Repositories
         private readonly IPostRepository _postRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Comment> _commentRepository;
+        private readonly ISecurityRepository _securityrepository;
+
 
 
 
@@ -26,6 +28,10 @@ namespace SocialMedia.Infrastructure.Repositories
         public IRepository<User> UserRepository => _userRepository ?? new BaseRepository<User>(_context);
 
         public IRepository<Comment> CommentRepository => _commentRepository ?? new BaseRepository<Comment>(_context);
+
+        public ISecurityRepository SecurityRepository => _securityrepository ?? new SecurityRepository(_context);
+
+
 
 
         public void Dispose()

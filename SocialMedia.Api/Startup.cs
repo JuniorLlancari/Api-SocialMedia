@@ -67,6 +67,9 @@ namespace SocialMedia.Api
 
             
             services.AddTransient<IUnitOfWork,UnirOfWork>(); //unit of work
+            services.AddTransient<ISecurityServices,SecurityServices>(); //unit of work
+
+             
             services.AddSingleton<IUriService>(provider =>
             {
                 var accesor = provider.GetRequiredService<IHttpContextAccessor>();

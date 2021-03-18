@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using SocialMedia.Core.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -18,28 +19,32 @@ namespace SocialMedia.Api.Controllers
     public class TokenController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly ISecurityServices _securityServices; 
 
-        public TokenController(IConfiguration configuration)
+        public TokenController(IConfiguration configuration, ISecurityServices securityServices)
         {
             _configuration = configuration;
+            _securityServices = securityServices;
         }
 
         [HttpPost]
-        public IActionResult Authentication(UserLogin login)
+        public async Task <IActionResult> Authentication(UserLogin login)
         {
-            if (IsValidUser(login))
+            var isValid = await IsValidUser(login);
+            if (isValid.Item1)
             {
-                var token = GenerateToken();
+                var token = GenerateToken(isValid.Item2);
                 return Ok(new { token});
             }
             return NotFound();
 
         }
-        private bool IsValidUser(UserLogin login)
+        private async Task <(bool,Security)> IsValidUser(UserLogin login)
         {
-            return true;
+             var user= await _securityServices.GetLoginByCredentials(login);
+            return (user!=null, user);
         }
-        private string GenerateToken()
+        private string GenerateToken(Security security)
         {
             //Header
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:SecretKey"]));
@@ -48,9 +53,9 @@ namespace SocialMedia.Api.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name,"Junior"),
-                new Claim(ClaimTypes.Email,"junior@gmail.com "),
-                new Claim(ClaimTypes.Role,"Adminv")
+                new Claim(ClaimTypes.Name,security.UserName),
+                new Claim("User",security.User),
+               new Claim(ClaimTypes.Role,security.Role.ToString())
 
             };
 

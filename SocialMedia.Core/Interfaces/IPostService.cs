@@ -6,6 +6,7 @@ using SocialMedia.Core.CustomEntities;
 
 namespace SocialMedia.Core.Interfaces
 {
+    
     public interface IPostService
     {
         Task InsertPost(Post post);
@@ -14,4 +15,5 @@ namespace SocialMedia.Core.Interfaces
         Task<bool> UpdatePost(Post post);
         Task<bool> DeletePost(int id);
     }
+
 }

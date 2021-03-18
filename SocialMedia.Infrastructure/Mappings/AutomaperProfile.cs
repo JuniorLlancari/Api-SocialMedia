@@ -15,6 +15,7 @@ namespace SocialMedia.Infrastructure.Mappings
             //FUNCIONARA SI LOS ATRIBUTOS SE LLAMAN IGUAL
             CreateMap<Post, PostDto>();
             CreateMap<PostDto, Post>();
+            CreateMap<Security, SecurityDto>().ReverseMap();
         }
     }
 }
