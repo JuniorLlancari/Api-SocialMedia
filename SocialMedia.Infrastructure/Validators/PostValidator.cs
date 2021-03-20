@@ -12,7 +12,16 @@ namespace SocialMedia.Infrastructure.Validators
         {
             RuleFor(post => post.Description)
                 .NotNull()
-                .Length(8, 500);
+                .WithMessage("La descripcion no puede ser nula");
+
+            RuleFor(post => post.Description)
+                   .Length(8, 500)
+                   .WithMessage("La logitud debe pasar los 8 caracteres ");
+
+            /*RuleFor(post => post.Description)
+                 .NotNull()
+                 .Length(8, 500);*/
+
 
             RuleFor(post => post.Date)
                 .NotNull()

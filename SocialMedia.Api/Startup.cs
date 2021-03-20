@@ -13,6 +13,7 @@ using SocialMedia.Core.Interfaces;
 using SocialMedia.Core.Options;
 using SocialMedia.Core.Services;
 using SocialMedia.Infrastructure.Data;
+using SocialMedia.Infrastructure.Extensions;
 using SocialMedia.Infrastructure.Filters;
 using SocialMedia.Infrastructure.Interfaces;
 using SocialMedia.Infrastructure.Options;
@@ -59,44 +60,12 @@ namespace SocialMedia.Api
             
             
 
+            services.AddDbContexts(Configuration);
+            services.AddOptions(Configuration);
+            services.AddServices();
+            services.AddSwagger();
 
-            services.AddTransient<IPostService, PostService>();
-            //REMPLAZANDO POR EL REPO GENERICO
-            //services.AddTransient<IPostRepository, PostRepository>();
-            //services.AddTransient<IUserRepository, UserRepository>();
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-
-            
-            services.AddTransient<IUnitOfWork,UnirOfWork>(); //unit of work
-            services.AddTransient<ISecurityServices,SecurityServices>(); //unit of work
-
-            services.AddSingleton<IPasswordService , PasswordServices>(); //unit of work
-
-
-             
-            services.AddSingleton<IUriService>(provider =>
-            {
-                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
-                var request = accesor.HttpContext.Request;
-                var absoluteUrl = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
-                return new UriService(absoluteUrl);
-            });
-
-
-            services.Configure<PaginationOptions> (Configuration.GetSection("Pagination"));
-            services.Configure<PasswordOptions>(Configuration.GetSection("PasswordOptions"));
-
-
-
-            services.AddDbContext<SocialMediaContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("SocialMedia")));
-            //APLICANDO FILTRO DE FORMA GLOBAL 4 -- NO RECOMEND - REMOVIDO
-
-            //DOCUMENTACION
-            services.AddSwaggerGen(doc =>
-            {
-                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "Social Media API", Version = "v1" });
-            });
+ 
 
            
             services.AddAuthentication(options =>
