@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using SocialMedia.Core.Interfaces;
+using SocialMedia.Infrastructure.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -19,12 +20,14 @@ namespace SocialMedia.Api.Controllers
     public class TokenController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly ISecurityServices _securityServices; 
+        private readonly ISecurityServices _securityServices;
+        private readonly IPasswordService _passwordService;
 
-        public TokenController(IConfiguration configuration, ISecurityServices securityServices)
+        public TokenController(IConfiguration configuration, ISecurityServices securityServices, IPasswordService passwordService)
         {
             _configuration = configuration;
             _securityServices = securityServices;
+            _passwordService= passwordService;
         }
 
         [HttpPost]
@@ -39,11 +42,17 @@ namespace SocialMedia.Api.Controllers
             return NotFound();
 
         }
+       
         private async Task <(bool,Security)> IsValidUser(UserLogin login)
         {
              var user= await _securityServices.GetLoginByCredentials(login);
-            return (user!=null, user);
+
+             var isValid = _passwordService.Check(user.Password, login.PassWord);
+
+
+             return (isValid, user);
         }
+       
         private string GenerateToken(Security security)
         {
             //Header
@@ -55,7 +64,7 @@ namespace SocialMedia.Api.Controllers
             {
                 new Claim(ClaimTypes.Name,security.UserName),
                 new Claim("User",security.User),
-               new Claim(ClaimTypes.Role,security.Role.ToString())
+                new Claim(ClaimTypes.Role,security.Role.ToString())
 
             };
 

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
 {
-    [Authorize(Roles =nameof(RoleType.Administrator))]
+  //  [Authorize(Roles =nameof(RoleType.Administrator))]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
@@ -24,12 +24,14 @@ namespace SocialMedia.Api.Controllers
     {
         private readonly ISecurityServices _securityServices;
         private readonly IMapper _mapper;
+        private readonly IPasswordService _passwordService;
 
 
-        public SecurityController(ISecurityServices securityServices, IMapper mapper)
+        public SecurityController(ISecurityServices securityServices, IMapper mapper, IPasswordService passwordService)
         {
             _securityServices = securityServices;
             _mapper = mapper;
+            _passwordService = passwordService;
         }
 
 
@@ -40,7 +42,12 @@ namespace SocialMedia.Api.Controllers
         public async Task<IActionResult> Post(SecurityDto securityDto)
         {
             var security = _mapper.Map<Security>(securityDto);
+
+            security.Password = _passwordService.Hash(security.Password);
+
             await _securityServices.RegisterUser(security);
+
+
             //RECUPERAMOS EL STRING 
             securityDto = _mapper.Map<SecurityDto>(security);
             var response = new ApiResponse<SecurityDto>(securityDto);
